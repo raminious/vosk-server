@@ -1,4 +1,4 @@
-# Vosk Restful Service backed by Flask and Celery
+# [Vosk](https://github.com/alphacep/vosk-server) Restful Service backed by Flask and Celery
 
 ### How to Setup
 
