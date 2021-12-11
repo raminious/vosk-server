@@ -14,6 +14,15 @@ python -m venv env
 source env/bin/activate
 ```
 
+Download a vosk model and unzip that in the root of the project as "model" directory.    
+https://alphacephei.com/vosk/models
+
+```
+wget http://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip
+unzip vosk-model-en-us-0.22.zip
+mv vosk-model-en-us-0.22 model
+```
+
 Install requirements
 ```
 pip install -r requirements.txt
