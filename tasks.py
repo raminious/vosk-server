@@ -4,7 +4,7 @@ import wave
 
 REDIS_BASE_URL = 'redis://localhost:6379'
 celery = Celery(
-    'asr-jobs',
+    'asr-tasks',
     broker=f"{REDIS_BASE_URL}/0",
     backend=f"{REDIS_BASE_URL}/1",
     task_time_limit=30 * 60,

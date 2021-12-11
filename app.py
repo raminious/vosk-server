@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from jobs import recognize
+from tasks import recognize
 import json
 
 api = Flask(__name__)
@@ -7,7 +7,7 @@ api = Flask(__name__)
 
 @api.route('/asr/recognize', methods=['POST'])
 def transcribe():
-  # an example for passing data to the job
+  # an example for passing data to the task
   data = {
       'filepath': './files/test.wav'
   }
