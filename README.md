@@ -1,4 +1,4 @@
-# Vosk Restful Service backed by Flask and Celery (Redis)
+# Vosk Restful Service backed by Flask and Celery
 
 ### How to Setup
 
@@ -33,19 +33,25 @@ python tasks.py
 
 ### Endpoints
 
-**Send a new transcribe request**
-`POST http://localhost:5000/asr/recognize` 
-returns `{ id: "<task_id>" }` as JSON
+**Send a new transcribe request**   
+`POST http://localhost:5000/asr/recognize`  
 
-**Check request status**
+Response: 
+```
+{ 
+  id: "<task_id>" 
+}
+```
+
+**Check request status**   
 `GET http://localhost:5000/asr/recognize/status/<task_id>`
 
-### Note
 
-This is a very basic example of using Vosk with a task scheduler like Celery. 
-
+### Files
 `app.py` contains the endpoints functions    
 `task.py` contains the script to run Celery and transcribing task function  
 `server.py` runs the production API service powered by gevent  
 
+### Notes
+This is a very basic example of using Vosk with a task scheduler like Celery. 
 You can fork the repo and change the codes and tune Celery configs based on your requirements.
