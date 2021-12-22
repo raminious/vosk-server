@@ -1,4 +1,4 @@
-amqp==5.0.6
+amqp==5.0.9
 autopep8==1.6.0
 billiard==3.6.4.0
 blinker==1.4
@@ -12,7 +12,7 @@ click-plugins==1.1.1
 click-repl==0.2.0
 Deprecated==1.2.13
 Flask==2.0.2
-gevent==21.8.0
+gevent==21.12.0
 greenlet==1.1.2
 idna==3.3
 itsdangerous==2.0.1
