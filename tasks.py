@@ -1,8 +1,13 @@
+import os
 from celery import Celery
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import wave
 
-REDIS_BASE_URL = 'redis://localhost:6379'
+try:
+    REDIS_BASE_URL = os.environ['REDIS_BASE_URL']
+except KeyError:
+    REDIS_BASE_URL = 'redis://localhost:6379'
+
 celery = Celery(
     'asr-tasks',
     broker=f"{REDIS_BASE_URL}/0",
@@ -13,9 +18,10 @@ celery = Celery(
 
 
 class Config:
-  enable_utc = True
-  timezone = 'Europe/London'
-  result_expires = 60 * 60 * 12  # 12 hours
+    enable_utc = True
+    timezone = 'Europe/London'
+    result_expires = 60 * 60 * 12  # 12 hours
+    result_extended = True
 
 
 celery.config_from_object(Config)
@@ -29,40 +35,36 @@ model = Model("model") if __name__ == '__main__' else None
 
 @celery.task(name='asr', default_retry_delay=300, max_retry=5)
 def recognize(data):
+    try:
+        file = wave.open(data['filename'], "rb")
 
-  try:
-    file = wave.open(data['filepath'], "rb")
-
-    if (file.getnchannels() != 1 or
+        if (file.getnchannels() != 1 or
                 file.getsampwidth() != 2 or
                 file.getcomptype() != "NONE"
-            ):
-      return "Invalid wav file", 400
-  except:
-    return "Invalid audio file", 400
+        ):
+            return "Invalid wav file", 400
+    except:
+        return "Invalid audio file", 400
 
-  rec = KaldiRecognizer(model, file.getframerate())
-  rec.SetWords(True)
-  rec.SetMaxAlternatives(0)
+    rec = KaldiRecognizer(model, file.getframerate())
+    rec.SetWords(True)
+    rec.SetMaxAlternatives(0)
 
-  isDone = False
-  while isDone == False:
-    data = file.readframes(4000)
-    if len(data) == 0:
-      break
+    while True:
+        data = file.readframes(4000)
+        if len(data) == 0:
+            break
+        rec.AcceptWaveform(data)
 
-    if rec.AcceptWaveform(data):
-      isDone = True
-
-  return rec.FinalResult()
+    return rec.FinalResult()
 
 
 if __name__ == '__main__':
-  celery.start(argv=[
-      'worker',
-      # '--without-mingle',
-      # '--without-gossip',
-      # '--without-heartbeat'
-      # '--loglevel=DEBUG',
-      '--concurrency=2'
-  ])
+    celery.start(argv=[
+        'worker',
+        # '--without-mingle',
+        # '--without-gossip',
+        # '--without-heartbeat'
+        # '--loglevel=DEBUG',
+        '--concurrency=2'
+    ])

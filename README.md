@@ -43,7 +43,17 @@ python tasks.py
 ### Endpoints
 
 **Send a new transcribe request**   
-`POST http://localhost:5000/asr/recognize`  
+```
+POST http://localhost:5000/asr/recognize
+Content-Type: audio/x-wav
+(wav file data)
+```  
+
+For example using **curl**:
+```shell script
+curl -XPOST -H'Content-Type: audio/x-wav' --data-binary "@files/example.wav" http://localhost:5000/asr/recognize
+```
+
 
 Response: 
 ```
@@ -54,7 +64,6 @@ Response:
 
 **Check request status**   
 `GET http://localhost:5000/asr/recognize/status/<task_id>`
-
 
 ### Files
 `app.py` contains the endpoints functions    
